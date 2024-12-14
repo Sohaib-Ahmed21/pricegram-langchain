@@ -2,7 +2,7 @@ import pandas as pd
 import asyncio
 from langchain_core.prompts import ChatPromptTemplate
 from langchain.agents import AgentExecutor, create_tool_calling_agent
-from langchain.memory import ConversationBufferMemory
+# from langchain.memory import ConversationBufferMemory
 
 #imports from other files
 from .chat_model import chat_model
@@ -29,18 +29,16 @@ prompt = ChatPromptTemplate.from_messages(
         ("system", system_prompt),
         ("human", "{input}"),
         ("placeholder", "{agent_scratchpad}"),
-        ("placeholder", "{chat_history}"),
-
     ]
 )
 tools = [rag_tool, tavily_tool]
 
 #creating the memory
-memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
+# memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
 
 def create_agent():
   agent = create_tool_calling_agent(chat_model, tools, prompt)
-  agent_executor = AgentExecutor(agent=agent, memory=memory, tools=tools, verbose=True)
+  agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
   return agent_executor
 
 agent = create_agent()
@@ -70,12 +68,12 @@ async def stream_agent_events(user_input):
 #     },
 #     version="v1",
 # ):
-    chat_history = memory.buffer_as_messages
-    print("History",chat_history)
+    # chat_history = memory.buffer_as_messages
+    # print("History",chat_history)
     async for event in agent.astream_events(
     {
-        "input": user_input,
-        "chat_history": chat_history
+        "input": user_input
+        # "chat_history": chat_history
     },
     version="v1",
 ):
