@@ -54,9 +54,21 @@ agent = create_agent()
 #     history_messages_key="history"  # Key for chat history
 # )
 
+events = []
 async def stream_agent_events(user_input):
     # Initialize list for events
-    events = []
+    stream = agent.astream_events(
+    {
+        "input": user_input
+        # "chat_history": chat_history
+    },
+    version="v1",
+)
+
+    async for event in stream:
+        if event["event"] == "on_chat_model_end":
+            # Never triggers in python<=3.10!
+            print(event)
 
     # Asynchronously iterate over agent events
     # Remove callbacks argument from astream_events call
@@ -70,13 +82,13 @@ async def stream_agent_events(user_input):
 # ):
     # chat_history = memory.buffer_as_messages
     # print("History",chat_history)
-    async for event in agent.astream_events(
-    {
-        "input": user_input
-        # "chat_history": chat_history
-    },
-    version="v1",
-):
+#     async for event in agent.astream_events(
+#     {
+#         "input": user_input
+#         # "chat_history": chat_history
+#     },
+#     version="v1",
+# ):
         # Process the event based on its type
         kind = event["event"]
         # if kind == "on_chain_start":
@@ -92,7 +104,7 @@ async def stream_agent_events(user_input):
             content = event["data"]["chunk"].content
             if content:
                 #This print statement goes through web socket send message
-                print(content, end="|")
+                yield content
         # elif kind == "on_tool_start":
         #     print("--")
             # print(f"Starting tool: {event['name']} with inputs: {event['data'].get('input')}")
@@ -107,7 +119,7 @@ async def stream_agent_events(user_input):
             # print("--")
             events.append(ids)
 
-    return events
+    yield events
 
 import asyncio
 
@@ -124,6 +136,7 @@ async def main():
     result2 = await stream_agent_events(user_input2)  # Await the second call
     print("\nSecond result:", result2)
 
+print("Chatbot ready.")
 # Run the main function
 if __name__ == "__main__":
     asyncio.run(main())

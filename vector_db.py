@@ -20,3 +20,5 @@ qdrant = QdrantVectorStore.from_existing_collection(
     api_key=qdrant_api_key,
     url=qdrant_url,
 )
+
+print("Qdrant collection setup successful.")
