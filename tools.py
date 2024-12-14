@@ -1,7 +1,7 @@
 from langchain_community.tools.tavily_search import TavilySearchResults
 from langchain.tools.retriever import create_retriever_tool
 
-from vector_db import qdrant
+from .vector_db import qdrant
 #Making qdrant retriever
 retriever = qdrant.as_retriever()
 
