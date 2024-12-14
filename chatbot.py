@@ -5,8 +5,8 @@ from langchain.agents import AgentExecutor, create_tool_calling_agent
 from langchain.memory import ConversationBufferMemory
 
 #imports from other files
-from chat_model import chat_model
-from tools import rag_tool, tavily_tool
+from .chat_model import chat_model
+from .tools import rag_tool, tavily_tool
 
 # Define the system prompt
 system_prompt = """
