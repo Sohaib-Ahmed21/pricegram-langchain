@@ -55,12 +55,11 @@ agent = create_agent()
 # )
 
 events = []
-async def stream_agent_events(user_input):
+async def stream_agent_events(user_input, chat_history = []):
     # Initialize list for events
     stream = agent.astream_events(
     {
-        "input": user_input
-        # "chat_history": chat_history
+        "input": f"{user_input} Here is the user's conversation history: {chat_history[-1:-5:-1]}. Please consider it while responding.",
     },
     version="v1",
 )
